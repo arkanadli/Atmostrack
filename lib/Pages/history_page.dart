@@ -19,7 +19,7 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               SizedBox(
                 width: double.maxFinite,
-                height: 284,
+                height: 285,
                 child: Center(
                   child:
                       Image.asset('assets/images/ilustrationPageHistory.png'),
