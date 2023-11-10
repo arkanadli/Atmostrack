@@ -107,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                         child: Text(
-                          'Kualitas Harian Sangat Baik!',
+                          'Kualitas Harian Sangat Baik! ',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: 'Montserrat',
