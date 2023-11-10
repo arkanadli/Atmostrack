@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
               SizedBox(
                 height: 400,
                 child: Text(
-                  'ASDDSADASD',
+                  'ASDDSADASD ',
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
