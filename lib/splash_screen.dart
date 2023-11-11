@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
             SizedBox(
               width: double.maxFinite,
               child: Text(
-                'ATMOSTRACK',
+                ' ATMOSTRACK ',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
