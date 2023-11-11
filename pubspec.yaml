@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
   fl_chart: ^0.64.0
+  date_time_picker: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +81,7 @@ flutter:
   fonts :
     - family: Poppins
       fonts : 
-        - asset : assets/font/Poppins-ExtraLight.ttf
+        - asset : assets/fonts/Poppins-ExtraLight.ttf
           weight : 200
         - asset : assets/fonts/Poppins-Regular.ttf
           weight : 400
@@ -90,7 +91,7 @@ flutter:
           weight : 900
     - family : Montserrat
       fonts :
-        - asset : assets/font/Montserrat-ExtraLight.ttf
+        - asset : assets/fonts/Montserrat-ExtraLight.ttf
           weight : 200
         - asset : assets/fonts/Montserrat-Regular.ttf
           weight : 400

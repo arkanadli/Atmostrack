@@ -40,17 +40,17 @@ class MainBoilerPlateState extends State<MainBoilerPlate> {
             // Icons.filter_hdr_sharp,
             Icons.home_filled,
             size: 30,
-            color: Color.fromARGB(255, 219, 219, 219),
+            color: Color.fromARGB(255, 238, 238, 238),
           ),
           Icon(
             Icons.history,
             size: 30,
-            color: Color.fromARGB(255, 219, 219, 219),
+            color: Color.fromARGB(255, 238, 238, 238),
           ),
           Icon(
             Icons.info_rounded,
             size: 30,
-            color: Color.fromARGB(255, 219, 219, 219),
+            color: Color.fromARGB(255, 238, 238, 238),
           )
         ],
         onTap: (value) {

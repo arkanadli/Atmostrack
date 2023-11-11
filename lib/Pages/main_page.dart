@@ -55,12 +55,12 @@ class _MainPageState extends State<MainPage> {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 10,
+                        height: 10.0,
                       ),
                       SizedBox(
                         width: double.maxFinite,
                         child: Text(
-                          'Monthly Recap',
+                          'Weekly Air Quality',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> {
                               right: 0,
                               left: 0,
                               top: 12,
-                              bottom: 12,
+                              bottom: 0,
                             ),
                             child: LineChart(
                               mainData(),
@@ -82,6 +82,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                       ),
+                      const Spacer(),
                       Container(
                         height: 1,
                         decoration: BoxDecoration(
@@ -89,9 +90,7 @@ class _MainPageState extends State<MainPage> {
                                 color: Theme.of(context).primaryColor,
                                 width: 1.2)),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      const Spacer(),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 4,
@@ -112,16 +111,14 @@ class _MainPageState extends State<MainPage> {
                           style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 20,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w600,
                               color:
                                   Theme.of(context).colorScheme.inversePrimary
                               // color: Color(0xFF823D6C),
                               ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 4,
-                      ),
+                      const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -171,7 +168,8 @@ class _MainPageState extends State<MainPage> {
                             ],
                           )
                         ],
-                      )
+                      ),
+                      const Spacer()
                     ],
                   ),
                 ),
@@ -238,6 +236,12 @@ class _MainPageState extends State<MainPage> {
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: const LineTouchData(
+        enabled: true,
+        touchTooltipData: LineTouchTooltipData(
+            tooltipBgColor: Colors.white,
+            tooltipBorder: BorderSide(color: Colors.grey)),
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,

@@ -29,13 +29,31 @@ class AtmostrackApp extends StatelessWidget {
             ),
             headlineMedium: TextStyle(
               fontFamily: 'Montserrat',
-              fontSize: 32,
-              fontWeight: FontWeight.w200,
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
               color: Color(0xFF823D6C),
             ),
             bodyMedium: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF823D6C),
+            ),
+            titleMedium: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+            labelSmall: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF823D6C),
+            ),
+            bodySmall: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Color(0xFF823D6C),
             )),
