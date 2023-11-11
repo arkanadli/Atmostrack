@@ -93,49 +93,62 @@ class ProfilePage extends StatelessWidget {
                         physics: const ScrollPhysics(),
                         children: [
                           Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 51, 23, 43),
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(70, 35))),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 51, 23, 43),
+                                border:
+                                    Border.all(color: Colors.purple, width: 2),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromARGB(105, 255, 130, 240),
+                                    blurRadius: 8,
+                                    spreadRadius: 0,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(16))),
                             child: Row(
                               children: [
                                 Container(
-                                  child: Image.asset(
-                                    "assets/images/fotopaquito.jpeg",
-                                    width: 150.0,
-                                    height: double.maxFinite,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/images/fotopaquito.jpeg"),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(16))),
                                 ),
                                 const Expanded(
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'M.Arkan Adli',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '19 Years old',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '152021168',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                     ],
                                   ),
@@ -144,49 +157,62 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 51, 23, 43),
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(70, 35))),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 51, 23, 43),
+                                border:
+                                    Border.all(color: Colors.purple, width: 2),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromARGB(105, 255, 130, 240),
+                                    blurRadius: 8,
+                                    spreadRadius: 0,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(16))),
                             child: Row(
                               children: [
                                 Container(
-                                  child: Image.asset(
-                                    "assets/images/fotopaquito.jpeg",
-                                    width: 150.0,
-                                    height: double.maxFinite,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/images/fotopaquito.jpeg"),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(16))),
                                 ),
                                 const Expanded(
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'M.Arkan Adli',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '19 Years old',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '152021168',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                     ],
                                   ),
@@ -195,49 +221,62 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 51, 23, 43),
-                                borderRadius: BorderRadius.all(
-                                    Radius.elliptical(70, 35))),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 51, 23, 43),
+                                border:
+                                    Border.all(color: Colors.purple, width: 2),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromARGB(105, 255, 130, 240),
+                                    blurRadius: 8,
+                                    spreadRadius: 0,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(16))),
                             child: Row(
                               children: [
                                 Container(
-                                  child: Image.asset(
-                                    "assets/images/fotopaquito.jpeg",
-                                    width: 150.0,
-                                    height: double.maxFinite,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              "assets/images/fotopaquito.jpeg"),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(16))),
                                 ),
                                 const Expanded(
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'M.Arkan Adli',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '19 Years old',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                       Text(
                                         '152021168',
                                         style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontFamily: 'Montserrat',
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white),
+                                            color: Colors.white70),
                                       ),
                                     ],
                                   ),

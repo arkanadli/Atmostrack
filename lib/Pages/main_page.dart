@@ -109,7 +109,7 @@ class _MainPageState extends State<MainPage> {
                           'Kualitas Harian Sangat Baik!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'Poppins',
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               color:
