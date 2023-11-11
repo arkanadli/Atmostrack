@@ -71,9 +71,7 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: fadeAnimation,
               child: SlideTransition(
                 position: transAnimation,
-                child: Container(
-                  child: Image.asset('assets/images/landingPage.png'),
-                ),
+                child: Image.asset('assets/images/landingPage.png'),
               ),
             ),
             const Spacer(),
