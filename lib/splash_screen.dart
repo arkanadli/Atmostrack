@@ -74,7 +74,9 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Image.asset('assets/images/landingPage.png'),
               ),
             ),
-            const Spacer(),
+            const SizedBox(
+              height: 30,
+            ),
             SizedBox(
               width: double.maxFinite,
               child: Text(

@@ -73,6 +73,18 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(
                       height: 24.0,
                     ),
+                    const Text(
+                      'Aplikasi Atmostrack, merupakan aplikasi Pemantauan Kualitas Udara yang membawa pemahaman mendalam tentang kondisi udara di sekitar Anda. Dirancang untuk memberikan informasi real-time tentang berbagai parameter udara, aplikasi ini menjadikan Anda sebagai agen cerdas lingkungan yang paham akan kualitas udara sekitar.',
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          color: Color.fromARGB(255, 225, 225, 225),
+                          fontWeight: FontWeight.w400),
+                    ),
+                    const SizedBox(
+                      height: 24.0,
+                    ),
                     Text(
                       "Members",
                       style: Theme.of(context).textTheme.titleMedium,
@@ -114,7 +126,7 @@ class ProfilePage extends StatelessWidget {
                                   decoration: const BoxDecoration(
                                       image: DecorationImage(
                                           image: AssetImage(
-                                              "assets/images/fotopaquito.jpeg"),
+                                              "assets/images/fotoarkan.png"),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.horizontal(
                                           left: Radius.circular(16))),
@@ -178,7 +190,7 @@ class ProfilePage extends StatelessWidget {
                                   decoration: const BoxDecoration(
                                       image: DecorationImage(
                                           image: AssetImage(
-                                              "assets/images/fotopaquito.jpeg"),
+                                              "assets/images/fotoarkan.png"),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.horizontal(
                                           left: Radius.circular(16))),
@@ -242,7 +254,7 @@ class ProfilePage extends StatelessWidget {
                                   decoration: const BoxDecoration(
                                       image: DecorationImage(
                                           image: AssetImage(
-                                              "assets/images/fotopaquito.jpeg"),
+                                              "assets/images/fotoarkan.png"),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.horizontal(
                                           left: Radius.circular(16))),

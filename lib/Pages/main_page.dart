@@ -41,136 +41,204 @@ class _MainPageState extends State<MainPage> {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(
-                width: double.maxFinite,
-                height: 285,
-                child: Center(
-                  child: Image.asset('assets/images/ilustrationMainPage.png'),
+              Container(
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: double.maxFinite,
+                      height: 265,
+                      child: Center(
+                        child: Image.asset(
+                            'assets/images/ilustrationMainPage.png'),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 12,
+                      left: 20,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color.fromARGB(255, 119, 87, 124),
+                              Color.fromARGB(255, 230, 143, 210),
+                            ],
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(40),
+                          ),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 85, 65, 91),
+                              width: 2),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                            Text(
+                              'Jl. Cisitu Indah Baru, Dago, Bandung',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255)),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: Text(
-                          'Weekly Air Quality',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
                         ),
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: AspectRatio(
-                          aspectRatio: 1.8,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              right: 0,
-                              left: 0,
-                              top: 12,
-                              bottom: 0,
-                            ),
-                            child: LineChart(
-                              mainData(),
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: Text(
+                            'Weekly Air Quality',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: AspectRatio(
+                            aspectRatio: 1.8,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 0,
+                                left: 0,
+                                top: 12,
+                                bottom: 0,
+                              ),
+                              child: LineChart(
+                                mainData(),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        height: 1,
-                        decoration: BoxDecoration(
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 1,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1.2)),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 24,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(500),
+                            ),
                             border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1.2)),
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(500),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary),
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
-                          border: Border.all(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary),
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        child: Text(
-                          'Kualitas Harian Sangat Baik!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary
-                              // color: Color(0xFF823D6C),
-                              ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '96%',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const Text(
-                                'Kadar Oksigen',
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                          child: Text(
+                            'Kualitas Harian Sangat Baik!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    Theme.of(context).colorScheme.inversePrimary
+                                // color: Color(0xFF823D6C),
+                                ),
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '125mg',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const Text(
-                                'Kadar Oktana',
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '20%',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const Text(
-                                'Kelembaban',
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                      const Spacer()
-                    ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '96%',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const Text(
+                                  'Kadar Oksigen',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '125mg',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const Text(
+                                  'Kadar Oktana',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '20%',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                const Text(
+                                  'Kelembaban',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 40.0,
+                        ),
+                        const SizedBox(
+                          height: 40.0,
+                        ),
+                        const SizedBox(
+                          height: 40.0,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -188,16 +256,16 @@ class _MainPageState extends State<MainPage> {
     );
     Widget text;
     switch (value.toInt()) {
-      case 1:
+      case 0:
         text = const Text('SEP', style: style);
         break;
       case 4:
         text = const Text('OCT', style: style);
         break;
-      case 7:
+      case 8:
         text = const Text('NOV', style: style);
         break;
-      case 10:
+      case 12:
         text = const Text('Desember', style: style);
         break;
       default:
@@ -236,11 +304,19 @@ class _MainPageState extends State<MainPage> {
 
   LineChartData mainData() {
     return LineChartData(
-      lineTouchData: const LineTouchData(
+      lineTouchData: LineTouchData(
         enabled: true,
         touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (touchedSpots) {
+              return [
+                LineTooltipItem(
+                  'Week-${(touchedSpots[0].x % 4 + 1).toStringAsFixed(0)} Average :  %${touchedSpots[0].y}',
+                  const TextStyle(fontSize: 12),
+                )
+              ];
+            },
             tooltipBgColor: Colors.white,
-            tooltipBorder: BorderSide(color: Colors.grey)),
+            tooltipBorder: const BorderSide(color: Colors.grey)),
       ),
       gridData: FlGridData(
         show: true,
