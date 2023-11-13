@@ -74,7 +74,7 @@ class ProfilePage extends StatelessWidget {
                       height: 24.0,
                     ),
                     const Text(
-                      'Aplikasi Atmostrack, merupakan aplikasi Pemantauan Kualitas Udara yang membawa pemahaman mendalam tentang kondisi udara di sekitar Anda. Dirancang untuk memberikan informasi real-time tentang berbagai parameter udara, aplikasi ini menjadikan Anda sebagai agen cerdas lingkungan yang paham akan kualitas udara sekitar.',
+                      'Aplikasi Atmostrack , merupakan aplikasi Pemantauan Kualitas Udara yang membawa pemahaman mendalam tentang kondisi udara di sekitar Anda. Dirancang untuk memberikan informasi real-time tentang berbagai parameter udara, aplikasi ini menjadikan Anda sebagai agen cerdas lingkungan yang paham akan kualitas udara sekitar.',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                           fontSize: 16,
