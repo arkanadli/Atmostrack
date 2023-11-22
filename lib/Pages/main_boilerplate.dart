@@ -1,5 +1,5 @@
-import 'package:atmostrack/Pages/history_page.dart';
-import 'package:atmostrack/Pages/main_page.dart';
+import 'package:atmostrack/Pages/history_page/history_page.dart';
+import 'package:atmostrack/Pages/main/main_page.dart';
 import 'package:atmostrack/Pages/profile_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';

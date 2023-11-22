@@ -5,10 +5,28 @@ class FirestoreDataSensor {
   final CollectionReference dataSensor =
       FirebaseFirestore.instance.collection('Data Sensor');
 
-  // READ : get notes from database
-  Stream<QuerySnapshot> getDataSensorStream() {
-    final dataSensorStream =
-        dataSensor.orderBy('timestamp', descending: true).snapshots();
+  Stream<QuerySnapshot> getDataSensor() {
+    final dataSensorStream = dataSensor.snapshots();
+    return dataSensorStream;
+  }
+
+  // READ: get notes from database
+  Stream<QuerySnapshot> getDataSensorStream(String targetTimestamp) {
+    // Parse targetTimestamp menjadi objek DateTime
+    DateTime parsedTargetTimestamp = DateTime.parse(targetTimestamp);
+
+    // Ubah DateTime menjadi tanggal tanpa jam, menit, detik
+    DateTime targetDate = DateTime(parsedTargetTimestamp.year,
+        parsedTargetTimestamp.month, parsedTargetTimestamp.day);
+
+    // Query menggunakan tanggal
+    final dataSensorStream = dataSensor
+        .where('timestamp',
+            isGreaterThanOrEqualTo: targetDate.millisecondsSinceEpoch)
+        .where('timestamp',
+            isLessThan:
+                targetDate.add(const Duration(days: 1)).millisecondsSinceEpoch)
+        .snapshots();
 
     return dataSensorStream;
   }

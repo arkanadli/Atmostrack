@@ -1,5 +1,5 @@
 import 'package:atmostrack/Pages/main_boilerplate.dart';
-import 'package:atmostrack/Pages/main_page.dart';
+import 'package:atmostrack/Pages/main/main_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
