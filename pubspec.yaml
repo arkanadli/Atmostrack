@@ -38,6 +38,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   fl_chart: ^0.64.0
   date_time_picker: ^2.1.0
+  cloud_firestore: ^4.13.2
+  firebase_core: ^2.23.0
 
 dev_dependencies:
   flutter_test:

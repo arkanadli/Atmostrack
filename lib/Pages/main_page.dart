@@ -203,7 +203,7 @@ class _MainPageState extends State<MainPage> {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const Text(
-                                  'Kadar Oktana',
+                                  'Kadar Metana',
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600),

@@ -1,3 +1,5 @@
+import 'package:atmostrack/Services/data_sensor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,8 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   String _selectedDate = '';
+
+  final FirestoreDataSensor firestoreDataSensor = FirestoreDataSensor();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,8 +105,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary),
-                                    initialValue:
-                                        '', // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
+                                    initialValue: DateTime.now()
+                                        .toString(), // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
                                     type: DateTimePickerType.date,
 
                                     firstDate: DateTime(2022),
@@ -115,6 +119,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       if (value.isNotEmpty) {
                                         setState(() {
                                           _selectedDate = value;
+                                          print(_selectedDate);
                                         });
                                       }
                                     },
@@ -126,8 +131,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                     },
                                     decoration: const InputDecoration(
                                       hintText: 'Pilih tanggal-',
-                                      suffixIcon:
-                                          Icon(Icons.date_range_outlined),
+                                      suffixIcon: Icon(
+                                        Icons.date_range_outlined,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -137,260 +144,226 @@ class _HistoryPageState extends State<HistoryPage> {
                           const SizedBox(
                             height: 20.0,
                           ),
-                          GridView(
-                            padding: EdgeInsets.zero,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 2.6 / 1,
-                              crossAxisCount: 1,
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 6,
-                            ),
-                            shrinkWrap: true,
-                            physics: const ScrollPhysics(),
-                            children: [
-                              Card(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                elevation: 8,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text('96%'),
-                                          Text('AVG',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall)
-                                        ],
-                                      ),
+                          StreamBuilder<QuerySnapshot>(
+                              stream: firestoreDataSensor.getDataSensorStream(),
+                              builder: (context, snapshot) {
+                                List dataSensorList = snapshot.data!.docs;
+                                final timestamp =
+                                    dataSensorList[1]['timestamp'].toDate();
+                                print(timestamp);
+                                if (snapshot.hasData) {
+                                  return GridView(
+                                    padding: EdgeInsets.zero,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 2.6 / 1,
+                                      crossAxisCount: 1,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 6,
                                     ),
-                                    Container(
-                                      width: 1.0,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.0,
-                                          color: Colors.grey[400]!,
+                                    shrinkWrap: true,
+                                    physics: const ScrollPhysics(),
+                                    children: [
+                                      Card(
+                                        color: const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        elevation: 8,
+                                        child: Row(
                                           children: [
-                                            Text('Kadar Oksigen',
-                                                textAlign: TextAlign.left,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall),
-                                            Text(
-                                              'Sangat Baik',
-                                              textAlign: TextAlign.left,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            )
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  const Text('96%'),
+                                                  Text('AVG',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall)
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 1.0,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1.0,
+                                                  color: Colors.grey[400]!,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Kadar Oksigen',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall),
+                                                    Text(
+                                                      'Sangat Baik',
+                                                      textAlign: TextAlign.left,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Card(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                elevation: 8,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text('125mg'),
-                                          Text('AVG',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall)
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 1.0,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.0,
-                                          color: Colors.grey[400]!,
+                                      Card(
+                                        color: const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        elevation: 8,
+                                        child: Row(
                                           children: [
-                                            Text('Kadar Oktana',
-                                                textAlign: TextAlign.left,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall),
-                                            Text(
-                                              'Cukup Baik',
-                                              textAlign: TextAlign.left,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            )
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  const Text('125mg'),
+                                                  Text('AVG',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall)
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 1.0,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1.0,
+                                                  color: Colors.grey[400]!,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Kadar Metana',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall),
+                                                    Text(
+                                                      'Cukup Baik',
+                                                      textAlign: TextAlign.left,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Card(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                elevation: 8,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text('20%'),
-                                          Text('AVG',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall)
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 1.0,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.0,
-                                          color: Colors.grey[400]!,
+                                      Card(
+                                        color: const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        elevation: 8,
+                                        child: Row(
                                           children: [
-                                            Text('Humidity',
-                                                textAlign: TextAlign.left,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall),
-                                            Text(
-                                              'Sangat Baik',
-                                              textAlign: TextAlign.left,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            )
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  const Text('20%'),
+                                                  Text('AVG',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall)
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 1.0,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 1.0,
+                                                  color: Colors.grey[400]!,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Humidity',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall),
+                                                    Text(
+                                                      'Sangat Baik',
+                                                      textAlign: TextAlign.left,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Card(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                elevation: 8,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text('96%'),
-                                          Text('AVG',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall)
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 1.0,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.0,
-                                          color: Colors.grey[400]!,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Kadar Oksigen',
-                                                textAlign: TextAlign.left,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelSmall),
-                                            Text(
-                                              'Sangat Baik',
-                                              textAlign: TextAlign.left,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                                    ],
+                                  );
+                                }
+                                return const Text('Loading...');
+                              }),
                           const SizedBox(
                             height: 20.0,
                           ),

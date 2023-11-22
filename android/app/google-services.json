@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799353460729",
+    "project_id": "atmostrack",
+    "storage_bucket": "atmostrack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799353460729:android:47ce3326a8e519ddd88f28",
+        "android_client_info": {
+          "package_name": "com.example.atmostrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwl3lT4EMARAPtrGP-wXoFo_A6uHSoSYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
