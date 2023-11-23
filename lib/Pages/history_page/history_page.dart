@@ -13,7 +13,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  String _selectedDate = '';
+  String _selectedDate = DateTime.now().toString();
 
   final FirestoreDataSensor firestoreDataSensor = FirestoreDataSensor();
   @override
@@ -107,8 +107,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary),
-                                    initialValue: DateTime.now()
-                                        .toString(), // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
+                                    initialValue:_selectedDate , // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
                                     type: DateTimePickerType.date,
 
                                     firstDate: DateTime(2022),
@@ -180,7 +179,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       ),
                                       CardDataSensor(
                                         dataSensor:
-                                            '${dataSesuaiTanggal[0]['kelembaban']}°C',
+                                            '${dataSesuaiTanggal[0]['suhu']}°C',
                                         namaParameter: 'Suhu',
                                       ),
                                     ],
