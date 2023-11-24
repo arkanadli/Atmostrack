@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class FirestoreDataSensor {
+class FirestoreService {
   final CollectionReference dataSensor =
       FirebaseFirestore.instance.collection('Data Sensor');
+
+  final CollectionReference overallQuality =
+      FirebaseFirestore.instance.collection('Overall Quality');
 
   Stream<QuerySnapshot> getDataSensor() {
     final dataSensorStream = dataSensor.snapshots();
     return dataSensorStream;
+  }
+
+  Stream<QuerySnapshot> getOverallQuality() {
+    final dataOverallQuality =
+        overallQuality.orderBy('timestamp', descending: false).snapshots();
+    return dataOverallQuality;
   }
 
   // READ: get notes from database

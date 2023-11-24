@@ -1,3 +1,5 @@
+import 'package:atmostrack/Services/data_sensor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -11,25 +13,16 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late List<FlSpot> listData;
+  late List<DateTime> listTanggal;
   List<Color> gradientColors = [
     const Color(0xFFAC7E9D),
     const Color(0xFFAC7E9D),
   ];
+  final FirestoreService firestoreService = FirestoreService();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    listData = [
-      const FlSpot(0, 78),
-      const FlSpot(1, 34),
-      const FlSpot(2, 56),
-      const FlSpot(3, 26),
-      const FlSpot(4, 67),
-      const FlSpot(5, 46),
-      const FlSpot(6, 69),
-      const FlSpot(7, 89),
-      const FlSpot(8, 94)
-    ];
   }
 
   @override
@@ -109,7 +102,7 @@ class _MainPageState extends State<MainPage> {
                         SizedBox(
                           width: double.maxFinite,
                           child: Text(
-                            'Weekly Air Quality',
+                            'Your Air Quality Stats',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
@@ -125,9 +118,45 @@ class _MainPageState extends State<MainPage> {
                                 top: 12,
                                 bottom: 0,
                               ),
-                              child: LineChart(
-                                mainData(),
-                              ),
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: firestoreService.getOverallQuality(),
+                                  builder: (context, snapshot) {
+                                    try {
+                                      if (snapshot.hasData) {
+                                        final overallQualityList =
+                                            snapshot.data!.docs;
+                                        // print(overallQualityList[0]['quality']);
+                                        // print(overallQualityList.length);
+                                        listData = List.generate(
+                                          overallQualityList.length,
+                                          (index) => FlSpot(
+                                              index.toDouble(),
+                                              double.parse(
+                                                  overallQualityList[index]
+                                                          ['quality']
+                                                      .toString())),
+                                        );
+
+                                        listTanggal = List.generate(
+                                            overallQualityList.length,
+                                            (index) => overallQualityList[index]
+                                                    ['timestamp']
+                                                .toDate());
+
+                                        return LineChart(mainData());
+                                      }
+                                      return const Text('ss');
+                                    } catch (e) {
+                                      return const Center(
+                                        child: SizedBox(
+                                            width: 50.0, // Set a fixed width
+                                            height: 50.0, // Set a fixed height
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.0,
+                                            )),
+                                      );
+                                    }
+                                  }),
                             ),
                           ),
                         ),
@@ -256,18 +285,18 @@ class _MainPageState extends State<MainPage> {
     );
     Widget text;
     switch (value.toInt()) {
-      case 0:
-        text = const Text('SEP', style: style);
-        break;
-      case 4:
-        text = const Text('OCT', style: style);
-        break;
-      case 8:
-        text = const Text('NOV', style: style);
-        break;
-      case 12:
-        text = const Text('Desember', style: style);
-        break;
+      // case 0:
+      //   text = const Text('SEP', style: style);
+      //   break;
+      // case 4:
+      //   text = const Text('OCT', style: style);
+      //   break;
+      // case 8:
+      //   text = const Text('NOV', style: style);
+      //   break;
+      // case 12:
+      //   text = const Text('Desember', style: style);
+      //   break;
       default:
         text = const Text('', style: style);
         break;
@@ -307,10 +336,13 @@ class _MainPageState extends State<MainPage> {
       lineTouchData: LineTouchData(
         enabled: true,
         touchTooltipData: LineTouchTooltipData(
+            maxContentWidth: 90,
             getTooltipItems: (touchedSpots) {
+              DateTime tanggal = listTanggal[touchedSpots[0].x.floor()];
+
               return [
                 LineTooltipItem(
-                  'Week-${(touchedSpots[0].x % 4 + 1).toStringAsFixed(0)} Average :  %${touchedSpots[0].y}',
+                  ' ${(tanggal.day)}-${(tanggal.month)}-${(tanggal.year)}   %${touchedSpots[0].y}',
                   const TextStyle(fontSize: 12),
                 )
               ];

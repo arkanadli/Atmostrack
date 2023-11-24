@@ -15,7 +15,7 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   String _selectedDate = DateTime.now().toString();
 
-  final FirestoreDataSensor firestoreDataSensor = FirestoreDataSensor();
+  final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,7 +107,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary),
-                                    initialValue:_selectedDate , // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
+                                    initialValue:
+                                        _selectedDate, // initialValue or controller.text can be null, empty or a DateTime string otherwise it will throw an error.
                                     type: DateTimePickerType.date,
 
                                     firstDate: DateTime(2022),
@@ -145,47 +146,55 @@ class _HistoryPageState extends State<HistoryPage> {
                             height: 20.0,
                           ),
                           StreamBuilder<QuerySnapshot>(
-                              stream: firestoreDataSensor.getDataSensor(),
+                              stream: firestoreService.getDataSensor(),
                               builder: (context, snapshot) {
                                 // QueryDocumentSnapshot dataEqualToDate;
-                                if (snapshot.hasData) {
-                                  final dataSensorList = snapshot.data!.docs;
-                                  List<Map<String, dynamic>> dataSesuaiTanggal =
-                                      filterDataByDate(
-                                          dataSensorList, _selectedDate);
-                                  print(dataSesuaiTanggal);
+                                try {
+                                  if (snapshot.hasData) {
+                                    final dataSensorList = snapshot.data!.docs;
+                                    List<Map<String, dynamic>>
+                                        dataSesuaiTanggal = filterDataByDate(
+                                            dataSensorList, _selectedDate);
+                                    // print(dataSesuaiTanggal);
 
-                                  return GridView(
-                                    padding: EdgeInsets.zero,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 2.6 / 1,
-                                      crossAxisCount: 1,
-                                      mainAxisSpacing: 20,
-                                      crossAxisSpacing: 6,
-                                    ),
-                                    shrinkWrap: true,
-                                    physics: const ScrollPhysics(),
-                                    children: [
-                                      CardDataSensor(
-                                        dataSensor:
-                                            '${dataSesuaiTanggal[0]['kelembaban']}%',
-                                        namaParameter: 'Kelembaban',
+                                    return GridView(
+                                      padding: EdgeInsets.zero,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        childAspectRatio: 2.6 / 1,
+                                        crossAxisCount: 1,
+                                        mainAxisSpacing: 20,
+                                        crossAxisSpacing: 6,
                                       ),
-                                      CardDataSensor(
-                                        dataSensor:
-                                            '${dataSesuaiTanggal[0]["metana"]}ppm',
-                                        namaParameter: 'Kadar Metana',
-                                      ),
-                                      CardDataSensor(
-                                        dataSensor:
-                                            '${dataSesuaiTanggal[0]['suhu']}°C',
-                                        namaParameter: 'Suhu',
-                                      ),
-                                    ],
+                                      shrinkWrap: true,
+                                      physics: const ScrollPhysics(),
+                                      children: [
+                                        CardDataSensor(
+                                          dataSensor:
+                                              '${dataSesuaiTanggal[0]['kelembaban']}%',
+                                          namaParameter: 'Kelembaban',
+                                        ),
+                                        CardDataSensor(
+                                          dataSensor:
+                                              '${dataSesuaiTanggal[0]["metana"]}ppm',
+                                          namaParameter: 'Kadar Metana',
+                                        ),
+                                        CardDataSensor(
+                                          dataSensor:
+                                              '${dataSesuaiTanggal[0]['suhu']}°C',
+                                          namaParameter: 'Suhu',
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return const Text('Loading...');
+                                } catch (e) {
+                                  return const SizedBox(
+                                    height: 400,
+                                    child: Center(
+                                        child: Text('No data available..')),
                                   );
                                 }
-                                return const Text('Loading...');
                               }),
                           const SizedBox(
                             height: 20.0,
