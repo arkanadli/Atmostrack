@@ -1,0 +1,41 @@
+{
+    "name": "Arkan Adli",
+    "hobi": ["Berenang","Bermain"],
+    "isDeveloper" : true,
+    "teman_teman" : [
+        {
+            "name" :"Setiyawati",
+            "kelas":"AA",
+            "alamat":"Bojong Soang",
+            "buku_buku":[
+                {
+                    "judul_buku" :"Tere Liye",
+                    "penerbit" : "Arkan Company",
+                    "penulis": "John Smith"
+                },
+                {
+                    "judul_buku" :"Tere Laii",
+                    "penerbit" : "Arkan Company",
+                    "penulis": "John Smith"
+                },
+                {
+                    "judul_buku" :"Tere Hiye",
+                    "penerbit" : "Arkan Company",
+                    "penulis": "John Smith"
+                }
+            ]
+        },
+        {
+            "name" :"Tiya Jahat",
+            "kelas":"AA",
+            "alamat":"Bolong Soang",
+            "buku_buku":[
+                {
+                    "judul_buku" :"Tere Liye",
+                    "penerbit" : "Arkan Company",
+                    "penulis": "John Smith"
+                }
+            ]
+        }
+    ]
+}
