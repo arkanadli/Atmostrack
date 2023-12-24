@@ -27,16 +27,16 @@ class SensorModel extends Equatable {
 
   factory SensorModel.fromJson(Map<String, dynamic> json) {
     return SensorModel(
-      id: json['id'],
-      suhu: json['suhu'],
-      kelembaban: json['kelembaban'],
-      kecerahan: json['kecerahan'],
-      tanggal: json['tanggal'],
-      metana: json['metana'],
-      pm1_0: json['pm1_0'],
-      pm2_5: json['pm2_5'],
-      pm10: json['pm10'],
-      co2: json['co2'],
+      id: json['id'] ?? 'sad',
+      suhu: int.parse(json['suhu']),
+      kelembaban: int.parse(json['kelembaban']),
+      kecerahan: int.parse(json['kecerahan']),
+      tanggal: json['tanggal'] ?? '2023-12-24',
+      metana: int.parse(json['metana']),
+      pm1_0: int.parse(json['pm1_0']),
+      pm2_5: int.parse(json['pm2_5']),
+      pm10: int.parse(json['pm10']),
+      co2: int.parse(json['co2']),
     );
   }
 

@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:atmostrack/Core/Helper%20Function/dateSelector.dart';
+import 'package:atmostrack/Model/sensor.dart';
 import 'package:atmostrack/Services/data_sensor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -9,6 +13,7 @@ import 'widgets/header_image.dart';
 import 'widgets/location_badge.dart';
 import 'widgets/no_data_screens.dart';
 import 'widgets/stream_data_sensor.dart';
+import 'package:http/http.dart' as http;
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -18,9 +23,30 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  final String _selectedDate = DateTime.now().toString();
+  late String _selectedDate = DateTime.now().toString();
 
-  final FirestoreService firestoreService = FirestoreService();
+  Future<SensorModel> getDataSensorByDate(String date) async {
+    try {
+      final queryParameters = {
+        'date': date,
+      };
+      final uri = Uri.https("air-quality-itenas.000webhostapp.com",
+          '/arkan/get_data_by_date.php', queryParameters);
+      final resp = await http.get(uri, headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      });
+      if (resp.statusCode != 200) {
+        throw 'Bad Response';
+      }
+      final data = jsonDecode(resp.body);
+      print(data);
+      return SensorModel.fromJson(data[0]);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  // final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,9 +80,55 @@ class _HistoryPageState extends State<HistoryPage> {
                           const SizedBox(
                             height: 20.0,
                           ),
-                          StreamDataSensor(
-                              firestoreService: firestoreService,
-                              selectedDate: _selectedDate),
+                          // StreamDataSensor(
+                          //     firestoreService: firestoreService,
+                          //     selectedDate: _selectedDate),
+                          FutureBuilder(
+                            future: getDataSensorByDate(_selectedDate),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox(
+                                  height: 300.0,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(snapshot.error.toString()),
+                                );
+                              }
+                              final data = snapshot.data!;
+                              return GridView(
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: 2.6 / 1,
+                                  crossAxisCount: 1,
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 6,
+                                ),
+                                shrinkWrap: true,
+                                physics: const ScrollPhysics(),
+                                children: [
+                                  CardDataSensor(
+                                    dataSensor: '${data.kelembaban}%',
+                                    namaParameter: 'Kelembaban',
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.metana}ppm',
+                                    namaParameter: 'Kadar Metana',
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.suhu}°C',
+                                    namaParameter: 'Suhu',
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                           const SizedBox(
                             height: 20.0,
                           ),
@@ -102,7 +174,11 @@ class _HistoryPageState extends State<HistoryPage> {
                 return null;
               },
               onChanged: (value) {
-                if (value.isNotEmpty) {}
+                if (value.isNotEmpty) {
+                  print(value);
+                  _selectedDate = value;
+                  setState(() {});
+                }
               },
               // We can also use onSaved
               onSaved: (value) {
