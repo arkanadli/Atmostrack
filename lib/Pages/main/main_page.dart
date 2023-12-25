@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:atmostrack/Core/Helper%20Function/calculateAQI.dart';
 import 'package:atmostrack/Model/sensor.dart';
 import 'package:atmostrack/Pages/main/widgets/card_sensor.dart';
 import 'package:atmostrack/Services/data_sensor.dart';
@@ -44,21 +45,7 @@ class _MainPageState extends State<MainPage> {
       }
       final listDataSensor = jsonDecode(res.body);
       // print(listDataSensor);
-      return SensorModel.fromJson(listDataSensor[0]);
-    } catch (e) {
-      throw e.toString();
-    }
-  }
-
-  Future<SensorModel> getSesuaiTanggal(String tanggal) async {
-    try {
-      final res = await http.get(
-        Uri.parse(
-            'https://air-quality-itenas.000webhostapp.com/ramzi/ambil_data_.php'),
-      );
-
-      final data = jsonDecode(res.body);
-      return SensorModel.fromJson(data);
+      return SensorModel.fromJson(listDataSensor.last);
     } catch (e) {
       throw e.toString();
     }
@@ -171,6 +158,10 @@ class _MainPageState extends State<MainPage> {
                 }
                 // print(snapshot.data);
                 final data = snapshot.data!;
+                // final indeksAQI = calculateAQIIndex(data);
+                const indeksAQI = 2542;
+                print(indeksAQI);
+                print(data);
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -200,30 +191,110 @@ class _MainPageState extends State<MainPage> {
                         height: 20,
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 24,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(500),
-                          ),
-                          border: Border.all(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary),
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        child: Text(
-                          'Kualitas Harian Sangat Baik!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary
-                              // color: Color(0xFF823D6C),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Indeks Kualitas Udara Harian',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: 180,
+                              height: 180,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(400),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.1),
+                                border: Border.all(
+                                    width: 4,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
+                                    color: getAqiColor(
+                                      indeksAQI,
+                                    )),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    getAqiIcon(indeksAQI),
+                                    size: 100,
+                                    color: getAqiColor(indeksAQI),
+                                  ),
+                                  Text(
+                                    '$indeksAQI',
+                                    style: TextStyle(
+                                      color: getAqiColor(indeksAQI),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 40,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Kategori : ',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 24,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(500),
+                                    ),
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary,
+                                      width: 2,
+                                    ),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.1),
+                                  ),
+                                  child: Text(
+                                    getAqiCategory(indeksAQI),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: getAqiColor(indeksAQI),
+                                      // color: Color(0xFF823D6C),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                         ),
                       ),
                       const SizedBox(
