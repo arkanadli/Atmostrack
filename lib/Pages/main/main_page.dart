@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:atmostrack/Core/Helper%20Function/calculateAQI.dart';
+import 'package:atmostrack/Core/Mqtt%20Handler/mqtt_handler.dart';
 import 'package:atmostrack/Model/sensor.dart';
 import 'package:atmostrack/Pages/main/widgets/card_sensor.dart';
 import 'package:atmostrack/Services/data_sensor.dart';
@@ -20,6 +21,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  MqttHandler mqttHandler = MqttHandler();
   late List<FlSpot> listData;
   late List<DateTime> listTanggal;
   List<Color> gradientColors = [
@@ -31,6 +33,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    mqttHandler.connect();
   }
 
   Future<SensorModel> getListDataSensor() async {
@@ -134,16 +137,25 @@ class _MainPageState extends State<MainPage> {
               future: getListDataSensor(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  const Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
                 if (snapshot.hasError) {
                   return Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          snapshot.error.toString(),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            snapshot.error.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           height: 20.0,
@@ -158,8 +170,8 @@ class _MainPageState extends State<MainPage> {
                 }
                 // print(snapshot.data);
                 final data = snapshot.data!;
-                // final indeksAQI = calculateAQIIndex(data);
-                const indeksAQI = 2542;
+                final indeksAQI = calculateAQIIndex(data);
+                // const indeksAQI = 2542;
                 print(indeksAQI);
                 print(data);
                 return SingleChildScrollView(
@@ -242,6 +254,30 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                 ],
                               ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            ValueListenableBuilder<String>(
+                              valueListenable: mqttHandler.data,
+                              builder: (BuildContext context, String value,
+                                  Widget? child) {
+                                if (value.isNotEmpty) {
+                                  // final jsonDecoded = jsonDecode(value);
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text(value,
+                                          style: const TextStyle(
+                                              color: Colors.deepPurpleAccent,
+                                              fontSize: 12))
+                                    ],
+                                  );
+                                }
+                                return const Text(
+                                    'Waiting to capturing data..');
+                              },
                             ),
                             const SizedBox(
                               height: 20.0,

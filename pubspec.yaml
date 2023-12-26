@@ -44,6 +44,7 @@ dependencies:
   http: ^1.1.0
   liquid_pull_to_refresh: ^3.0.1
   iconsax: ^0.0.8
+  mqtt_client: ^10.0.1
 
 dev_dependencies:
   flutter_test:
