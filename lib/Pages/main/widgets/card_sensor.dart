@@ -15,26 +15,32 @@ class CardSensor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 50,
-              color: Theme.of(context).primaryColor.withAlpha(232),
+        Card(
+          shape: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 50,
+                  color: Theme.of(context).primaryColor.withAlpha(232),
+                ),
+              ],
             ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Text(
-              nama,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-          ],
+          ),
+        ),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        Text(
+          nama,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ],
     );

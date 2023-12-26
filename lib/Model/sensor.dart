@@ -69,4 +69,30 @@ class SensorModel extends Equatable {
         pm10,
         co2,
       ];
+
+  factory SensorModel.fromString(String input) {
+    List<String> values = input.split(' ');
+
+    if (values.length != 8) {
+      throw const FormatException('Invalid input format');
+    }
+
+    try {
+      return SensorModel(
+        id: 'sad', // You can set a default value or modify as needed
+        suhu: double.parse(values[0]).toInt(),
+        kelembaban: double.parse(values[1]).toInt(),
+        kecerahan: double.parse(values[2]).toInt(),
+        metana: double.parse(values[3]).toInt(),
+        co2: double.parse(values[4]).toInt(),
+        pm10: double.parse(values[5]).toInt(),
+        pm2_5: double.parse(values[6]).toInt(),
+        pm1_0: double.parse(values[7]).toInt(),
+        tanggal:
+            '2023-12-24', // You can set a default value or modify as needed
+      );
+    } catch (e) {
+      throw FormatException('Error parsing values: $e');
+    }
+  }
 }

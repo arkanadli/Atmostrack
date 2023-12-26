@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:iconsax/iconsax.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
+import 'widgets/detail_data_sensor_list.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -37,21 +39,30 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<SensorModel> getListDataSensor() async {
-    try {
-      final res = await http.get(
-        Uri.parse(
-            'https://air-quality-itenas.000webhostapp.com/ramzi/ambil_data_.php'),
-      );
+    const maxRetries = 3;
+    int retryCount = 0;
 
-      if (res.statusCode != 200) {
-        throw 'Bad Response';
+    while (retryCount < maxRetries) {
+      try {
+        final res = await http.get(Uri.parse(
+            'https://air-quality-itenas.000webhostapp.com/ramzi/ambil_data_.php'));
+
+        if (res.statusCode == 200) {
+          final listDataSensor = jsonDecode(res.body);
+          return SensorModel.fromJson(listDataSensor.last);
+        } else {
+          throw 'Bad Response';
+        }
+      } catch (e) {
+        print('Error: $e');
+        retryCount++;
+        // You can add a delay before retrying if needed
+        await Future.delayed(const Duration(seconds: 2));
       }
-      final listDataSensor = jsonDecode(res.body);
-      // print(listDataSensor);
-      return SensorModel.fromJson(listDataSensor.last);
-    } catch (e) {
-      throw e.toString();
     }
+
+    // If all retries fail, throw an exception
+    throw 'Failed to connect to server';
   }
 
   @override
@@ -161,7 +172,9 @@ class _MainPageState extends State<MainPage> {
                           height: 20.0,
                         ),
                         ElevatedButton(
-                          onPressed: getListDataSensor,
+                          onPressed: () {
+                            setState(() {});
+                          },
                           child: const Icon(Icons.refresh),
                         )
                       ],
@@ -169,11 +182,7 @@ class _MainPageState extends State<MainPage> {
                   );
                 }
                 // print(snapshot.data);
-                final data = snapshot.data!;
-                final indeksAQI = calculateAQIIndex(data);
-                // const indeksAQI = 2542;
-                print(indeksAQI);
-                print(data);
+
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -202,199 +211,148 @@ class _MainPageState extends State<MainPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Indeks Kualitas Udara Harian',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              width: 180,
-                              height: 180,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(400),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.1),
-                                border: Border.all(
-                                    width: 4,
-                                    strokeAlign: BorderSide.strokeAlignOutside,
-                                    color: getAqiColor(
-                                      indeksAQI,
-                                    )),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    getAqiIcon(indeksAQI),
-                                    size: 100,
-                                    color: getAqiColor(indeksAQI),
-                                  ),
-                                  Text(
-                                    '$indeksAQI',
-                                    style: TextStyle(
-                                      color: getAqiColor(indeksAQI),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 40,
+                      ValueListenableBuilder<String>(
+                        valueListenable: mqttHandler.data,
+                        builder: (BuildContext context, String value,
+                            Widget? child) {
+                          if (value.isNotEmpty) {
+                            final data = SensorModel.fromString(value);
+                            final indeksAQI = calculateAQIIndex(data);
+                            // const indeksAQI = 2542;
+                            // print(indeksAQI);
+                            // print(data);
+                            // final jsonDecoded = jsonDecode(value);
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Indeks Kualitas Udara Harian',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            ValueListenableBuilder<String>(
-                              valueListenable: mqttHandler.data,
-                              builder: (BuildContext context, String value,
-                                  Widget? child) {
-                                if (value.isNotEmpty) {
-                                  // final jsonDecoded = jsonDecode(value);
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(value,
-                                          style: const TextStyle(
-                                              color: Colors.deepPurpleAccent,
-                                              fontSize: 12))
-                                    ],
-                                  );
-                                }
-                                return const Text(
-                                    'Waiting to capturing data..');
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Kategori : ',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Container(
+                                      width: 180,
+                                      height: 180,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(400),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(0.1),
+                                        border: Border.all(
+                                            width: 4,
+                                            strokeAlign:
+                                                BorderSide.strokeAlignOutside,
+                                            color: getAqiColor(
+                                              indeksAQI,
+                                            )),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            getAqiIcon(indeksAQI),
+                                            size: 100,
+                                            color: getAqiColor(indeksAQI),
+                                          ),
+                                          Text(
+                                            '$indeksAQI',
+                                            style: TextStyle(
+                                              color: getAqiColor(indeksAQI),
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 40,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Kategori : ',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 8,
+                                            horizontal: 24,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(500),
+                                            ),
+                                            border: Border.all(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inversePrimary,
+                                              width: 2,
+                                            ),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.1),
+                                          ),
+                                          child: Text(
+                                            getAqiCategory(indeksAQI),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                              color: getAqiColor(indeksAQI),
+                                              // color: Color(0xFF823D6C),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(500),
-                                    ),
-                                    border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary,
-                                      width: 2,
-                                    ),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.1),
-                                  ),
-                                  child: Text(
-                                    getAqiCategory(indeksAQI),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: getAqiColor(indeksAQI),
-                                      // color: Color(0xFF823D6C),
-                                    ),
-                                  ),
+                                const SizedBox(
+                                  height: 20,
                                 ),
+                                DetailDataSensorList(data: data),
                               ],
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CardSensor(
-                            nama: 'Suhu Udara',
-                            value: "${data.suhu}°C",
-                            icon: Icons.waves_sharp,
-                          ),
-                          CardSensor(
-                            nama: 'Kadar Metana',
-                            value: "${data.metana}mg",
-                            icon: Icons.gas_meter_outlined,
-                          ),
-                        ],
+                            );
+                          }
+                          return const Text('Waiting to capturing data..');
+                        },
                       ),
                       const SizedBox(
                         height: 20.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CardSensor(
-                            nama: 'Suhu Udara',
-                            value: "${data.suhu}°C",
-                            icon: Icons.waves_sharp,
-                          ),
-                          CardSensor(
-                            nama: 'Kadar Metana',
-                            value: "${data.metana}mg",
-                            icon: Icons.gas_meter_outlined,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CardSensor(
-                            nama: 'Suhu Udara',
-                            value: "${data.suhu}°C",
-                            icon: Icons.waves_sharp,
-                          ),
-                          CardSensor(
-                            nama: 'Kadar Metana',
-                            value: "${data.metana}mg",
-                            icon: Icons.gas_meter_outlined,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
-                      const SizedBox(
-                        height: 40.0,
                       ),
                     ],
                   ),

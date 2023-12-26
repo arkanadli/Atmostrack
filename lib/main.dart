@@ -41,8 +41,8 @@ class AtmostrackApp extends StatelessWidget {
             ),
             bodyMedium: TextStyle(
               fontFamily: 'Poppins',
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
+              fontSize: 28,
+              fontWeight: FontWeight.w500,
               color: Color(0xFF823D6C),
             ),
             titleMedium: TextStyle(

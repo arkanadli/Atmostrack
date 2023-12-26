@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 
 int calculateAQIIndex(SensorModel sensorData) {
   // Define the breakpoints and corresponding AQI ranges
-  const List<int> breakpoints = [0, 50, 100, 150, 200, 300];
+  const List<int> breakpoints = [0, 50, 100, 150, 200, 50000, 5000];
   const List<int> aqiRanges = [0, 50, 100, 150, 200, 300];
 
   // Calculate AQI for each pollutant (PM2.5, PM10, CO2, etc.)
   final List<int> pollutants = [
     sensorData.pm2_5,
     sensorData.pm10,
-    sensorData.co2,
+    sensorData.pm1_0,
+    sensorData.co2
     // Add other pollutants as needed
   ];
 

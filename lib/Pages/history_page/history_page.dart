@@ -7,6 +7,7 @@ import 'package:atmostrack/Services/data_sensor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'widgets/card_data_sensor.dart';
 import 'widgets/header_image.dart';
@@ -23,27 +24,41 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late String _selectedDate = DateTime.now().toString();
+  late String _selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   Future<SensorModel> getDataSensorByDate(String date) async {
-    try {
-      final queryParameters = {
-        'date': date,
-      };
-      final uri = Uri.https("air-quality-itenas.000webhostapp.com",
-          '/arkan/get_data_by_date.php', queryParameters);
-      final resp = await http.get(uri, headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      });
-      if (resp.statusCode != 200) {
-        throw 'Bad Response';
+    const maxRetries = 3;
+    int retryCount = 0;
+
+    while (retryCount < maxRetries) {
+      try {
+        final queryParameters = {
+          'date': date,
+        };
+        final uri = Uri.https("air-quality-itenas.000webhostapp.com",
+            '/arkan/get_data_by_date.php', queryParameters);
+
+        final resp = await http.get(uri, headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+        });
+
+        if (resp.statusCode == 200) {
+          final data = jsonDecode(resp.body);
+          print(data);
+          return SensorModel.fromJson(data[0]);
+        } else {
+          throw 'Bad Response';
+        }
+      } catch (e) {
+        print('Error: $e');
+        retryCount++;
+        // You can add a delay before retrying if needed
+        await Future.delayed(const Duration(seconds: 2));
       }
-      final data = jsonDecode(resp.body);
-      print(data);
-      return SensorModel.fromJson(data[0]);
-    } catch (e) {
-      throw e.toString();
     }
+
+    // If all retries fail, throw an exception
+    throw 'Failed to connect to server';
   }
 
   // final FirestoreService firestoreService = FirestoreService();
@@ -97,7 +112,31 @@ class _HistoryPageState extends State<HistoryPage> {
                               }
                               if (snapshot.hasError) {
                                 return Center(
-                                  child: Text(snapshot.error.toString()),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Text(
+                                          snapshot.error.toString(),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 3,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20.0,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {});
+                                        },
+                                        child: const Icon(Icons.refresh),
+                                      )
+                                    ],
+                                  ),
                                 );
                               }
                               final data = snapshot.data!;
