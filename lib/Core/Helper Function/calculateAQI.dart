@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 
 int calculateAQIIndex(SensorModel sensorData) {
   // Define the breakpoints and corresponding AQI ranges
-  const List<int> breakpoints = [0, 50, 100, 150, 200, 50000, 5000];
-  const List<int> aqiRanges = [0, 50, 100, 150, 200, 300];
+  const List<int> breakpoints = [0, 50, 100, 150, 200, 300, 5000];
+  const List<int> aqiRanges = [0, 50, 100, 150, 200, 300, 1000];
 
   // Calculate AQI for each pollutant (PM2.5, PM10, CO2, etc.)
   final List<int> pollutants = [
     sensorData.pm2_5,
-    sensorData.pm10,
+    // sensorData.pm10,
     sensorData.pm1_0,
-    sensorData.co2
+    // sensorData.co2,
+    // sensorData.metana
     // Add other pollutants as needed
   ];
 
@@ -83,5 +84,21 @@ Color getAqiColor(int indeksAQI) {
     return const Color.fromARGB(255, 255, 0, 0);
   } else {
     return Colors.black;
+  }
+}
+
+String getAqiRecommendation(int indeksAQI) {
+  if (indeksAQI <= 50) {
+    return 'Udara baik. Aman untuk kegiatan di luar!';
+  } else if (indeksAQI <= 100) {
+    return 'Udara cukup baik. Hati-hati bagi yang sensitif.';
+  } else if (indeksAQI <= 150) {
+    return 'Tidak sehat bagi kelompok tertentu. Batasi kegiatan di luar jika anak-anak atau lansia.';
+  } else if (indeksAQI <= 200) {
+    return 'Udara kurang sehat. Waspadai efek kesehatan, terutama bagi yang sensitif.';
+  } else if (indeksAQI <= 300) {
+    return 'Udara sangat tidak sehat. Batasi kegiatan di luar ruangan untuk semua orang.';
+  } else {
+    return 'Bahaya! Udara sangat tidak sehat. Hindari kegiatan di luar dan gunakan masker.';
   }
 }

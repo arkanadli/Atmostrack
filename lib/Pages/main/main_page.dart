@@ -7,6 +7,7 @@ import 'package:atmostrack/Pages/main/widgets/card_sensor.dart';
 import 'package:atmostrack/Services/data_sensor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -38,7 +39,7 @@ class _MainPageState extends State<MainPage> {
     mqttHandler.connect();
   }
 
-  Future<SensorModel> getListDataSensor() async {
+  Future<SensorModel> getDataSensor() async {
     const maxRetries = 3;
     int retryCount = 0;
 
@@ -63,6 +64,26 @@ class _MainPageState extends State<MainPage> {
 
     // If all retries fail, throw an exception
     throw 'Failed to connect to server';
+  }
+
+  Future<List<SensorModel>> getData7DaysAverage() async {
+    final response = await http.get(
+      Uri.parse(
+          'https://air-quality-itenas.000webhostapp.com/arkan/get_7_days_avg.php'),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonDecoded = jsonDecode(response.body) as List;
+      final listDataSensorAVG = jsonDecoded
+          .map(
+            (e) => SensorModel.fromJson(e),
+          )
+          .toList();
+      print(listDataSensorAVG);
+      return listDataSensorAVG;
+    } else {
+      throw 'Bad Response';
+    }
   }
 
   @override
@@ -143,223 +164,127 @@ class _MainPageState extends State<MainPage> {
         decoration:
             const BoxDecoration(color: Color.fromARGB(255, 255, 255, 255)),
         child: LiquidPullToRefresh(
-          onRefresh: getListDataSensor,
-          child: FutureBuilder(
-              future: getListDataSensor(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            snapshot.error.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            style: const TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {});
-                          },
-                          child: const Icon(Icons.refresh),
-                        )
-                      ],
-                    ),
-                  );
-                }
+            onRefresh: getData7DaysAverage,
+            child:
                 // print(snapshot.data);
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: double.maxFinite,
-                        child: Text(
-                          'Your Air Quality Stats',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
+                SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  dailyDataSection(mqttHandler: mqttHandler),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  dividerSection(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  chartSection(),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                ],
+              ),
+            )),
+      ),
+    );
+  }
+
+  Container dividerSection() {
+    return Container(
+      height: 1,
+      decoration: BoxDecoration(
+          border:
+              Border.all(color: Theme.of(context).primaryColor, width: 1.2)),
+    );
+  }
+
+  Column chartSection() {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.maxFinite,
+          child: Text(
+            'Indeks Kualitas Harian',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
+        FutureBuilder(
+          future: getData7DaysAverage(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        snapshot.error.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        style: const TextStyle(
+                          fontSize: 12,
                         ),
                       ),
-                      displayChart(),
-                      const SizedBox(
-                        height: 20,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: const Icon(Icons.refresh),
+                    )
+                  ],
+                ),
+              );
+            }
+            final data = snapshot.data!;
+            final listAQI = data.map((e) => calculateAQIIndex(e)).toList();
+            print(listAQI);
+            listData = List.generate(
+              data.length,
+              (index) => FlSpot(
+                  index.toDouble(), double.parse(listAQI[index].toString())),
+            );
+            print(listData);
+            listTanggal = List.generate(
+              data.length,
+              (index) => DateTime.parse(data[index].tanggal),
+            );
+            print(listTanggal);
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: SizedBox(
+                height: 200,
+                child: AspectRatio(
+                  aspectRatio: 1.8,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 12,
+                        left: 0,
+                        top: 12,
+                        bottom: 0,
                       ),
-                      Container(
-                        height: 1,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1.2)),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ValueListenableBuilder<String>(
-                        valueListenable: mqttHandler.data,
-                        builder: (BuildContext context, String value,
-                            Widget? child) {
-                          if (value.isNotEmpty) {
-                            final data = SensorModel.fromString(value);
-                            final indeksAQI = calculateAQIIndex(data);
-                            // const indeksAQI = 2542;
-                            // print(indeksAQI);
-                            // print(data);
-                            // final jsonDecoded = jsonDecode(value);
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Indeks Kualitas Udara Harian',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    Container(
-                                      width: 180,
-                                      height: 180,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(400),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary
-                                            .withOpacity(0.1),
-                                        border: Border.all(
-                                            width: 4,
-                                            strokeAlign:
-                                                BorderSide.strokeAlignOutside,
-                                            color: getAqiColor(
-                                              indeksAQI,
-                                            )),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            getAqiIcon(indeksAQI),
-                                            size: 100,
-                                            color: getAqiColor(indeksAQI),
-                                          ),
-                                          Text(
-                                            '$indeksAQI',
-                                            style: TextStyle(
-                                              color: getAqiColor(indeksAQI),
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 40,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Kategori : ',
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 8,
-                                            horizontal: 24,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(500),
-                                            ),
-                                            border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inversePrimary,
-                                              width: 2,
-                                            ),
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                                .withOpacity(0.1),
-                                          ),
-                                          child: Text(
-                                            getAqiCategory(indeksAQI),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                              color: getAqiColor(indeksAQI),
-                                              // color: Color(0xFF823D6C),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                DetailDataSensorList(data: data),
-                              ],
-                            );
-                          }
-                          return const Text('Waiting to capturing data..');
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                      child: LineChart(mainData())),
+                ),
+              ),
+            );
+          },
         ),
-      ),
+      ],
     );
   }
 
@@ -453,13 +378,24 @@ class _MainPageState extends State<MainPage> {
     String text;
     switch (value.toInt()) {
       case 1:
-        text = '0%';
+        text = '0';
         break;
       case 50:
-        text = '50%';
+        text = '50';
         break;
-      case 98:
-        text = '100%';
+      case 100:
+        text = '100';
+        break;
+      case 150:
+        text = '150';
+      case 200:
+        text = '200';
+        break;
+      case 250:
+        text = '250';
+        break;
+      case 300:
+        text = '300';
         break;
       default:
         return Container();
@@ -479,7 +415,7 @@ class _MainPageState extends State<MainPage> {
 
               return [
                 LineTooltipItem(
-                  ' ${(tanggal.day)}-${(tanggal.month)}-${(tanggal.year)}   %${touchedSpots[0].y}',
+                  ' ${(tanggal.day)}-${(tanggal.month)}-${(tanggal.year)}   AQI : ${touchedSpots[0].y}',
                   const TextStyle(fontSize: 12),
                 )
               ];
@@ -537,7 +473,10 @@ class _MainPageState extends State<MainPage> {
       minX: 0,
       maxX: listData.length.toDouble() - 1,
       minY: 0,
-      maxY: 100,
+      maxY: listData
+              .reduce((value, element) => value.y > element.y ? value : element)
+              .y +
+          30,
       lineBarsData: [
         LineChartBarData(
           spots: listData,
@@ -560,6 +499,182 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class dailyDataSection extends StatelessWidget {
+  const dailyDataSection({
+    super.key,
+    required this.mqttHandler,
+  });
+
+  final MqttHandler mqttHandler;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<String>(
+      valueListenable: mqttHandler.data,
+      builder: (BuildContext context, String value, Widget? child) {
+        if (value.isNotEmpty) {
+          final data = SensorModel.fromString(value);
+          final indeksAQI = calculateAQIIndex(data);
+          // const indeksAQI = 2542;
+          // print(indeksAQI);
+          // print(data);
+          // final jsonDecoded = jsonDecode(value);
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Kualitas Udara Sekitar',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    width: 180,
+                    height: 180,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(400),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.1),
+                      border: Border.all(
+                          width: 4,
+                          strokeAlign: BorderSide.strokeAlignOutside,
+                          color: getAqiColor(
+                            indeksAQI,
+                          )),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          getAqiIcon(indeksAQI),
+                          size: 100,
+                          color: getAqiColor(indeksAQI),
+                        ),
+                        Text(
+                          '$indeksAQI',
+                          style: TextStyle(
+                            color: getAqiColor(indeksAQI),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Kategori : ',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 24,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(500),
+                          ),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            width: 2,
+                          ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.1),
+                        ),
+                        child: Text(
+                          getAqiCategory(indeksAQI),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: getAqiColor(indeksAQI),
+                            // color: Color(0xFF823D6C),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      getAqiRecommendation(indeksAQI),
+                      textAlign: TextAlign.justify,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              DetailDataSensorList(data: data),
+            ],
+          );
+        }
+        return const SizedBox(
+          height: 200,
+          child: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: 60,
+                color: Colors.orange, // You can customize the color
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                'Device Current status is Offline',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                'No data realtime will be displayed.',
+                style: TextStyle(fontSize: 14),
+              ),
+            ],
+          )),
+        );
+      },
     );
   }
 }

@@ -46,6 +46,7 @@ dependencies:
   iconsax: ^0.0.8
   mqtt_client: ^10.0.1
   intl: ^0.17.0
+  dio: ^5.4.0
 
 dev_dependencies:
   flutter_test:

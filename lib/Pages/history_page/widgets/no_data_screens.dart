@@ -8,11 +8,26 @@ class NoDataScreens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
-      height: 400,
+      height: 300,
       child: Center(
-          child: Text('No data available..')),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.warning_amber,
+            size: 40,
+            color: Colors.orange, // You can customize the color
+          ),
+          Text(
+            'No data available',
+            style: TextStyle(fontSize: 18),
+          ),
+          Text(
+            'Please Select Another Date to be Displayed!',
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      )),
     );
   }
 }
-
-

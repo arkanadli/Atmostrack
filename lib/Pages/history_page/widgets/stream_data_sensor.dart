@@ -24,15 +24,13 @@ class StreamDataSensor extends StatelessWidget {
           try {
             if (snapshot.hasData) {
               final dataSensorList = snapshot.data!.docs;
-              List<Map<String, dynamic>>
-                  dataSesuaiTanggal = filterDataByDate(
-                      dataSensorList, _selectedDate);
+              List<Map<String, dynamic>> dataSesuaiTanggal =
+                  filterDataByDate(dataSensorList, _selectedDate);
               // print(dataSesuaiTanggal);
 
               return GridView(
                 padding: EdgeInsets.zero,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: 2.6 / 1,
                   crossAxisCount: 1,
                   mainAxisSpacing: 20,
@@ -42,19 +40,9 @@ class StreamDataSensor extends StatelessWidget {
                 physics: const ScrollPhysics(),
                 children: [
                   CardDataSensor(
-                    dataSensor:
-                        '${dataSesuaiTanggal[0]['kelembaban']}%',
+                    dataSensor: '${dataSesuaiTanggal[0]['kelembaban']}%',
                     namaParameter: 'Kelembaban',
-                  ),
-                  CardDataSensor(
-                    dataSensor:
-                        '${dataSesuaiTanggal[0]["metana"]}ppm',
-                    namaParameter: 'Kadar Metana',
-                  ),
-                  CardDataSensor(
-                    dataSensor:
-                        '${dataSesuaiTanggal[0]['suhu']}°C',
-                    namaParameter: 'Suhu',
+                    icon: Icons.water_drop_outlined,
                   ),
                 ],
               );

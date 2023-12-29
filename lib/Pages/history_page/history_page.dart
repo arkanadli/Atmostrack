@@ -95,6 +95,18 @@ class _HistoryPageState extends State<HistoryPage> {
                           const SizedBox(
                             height: 20.0,
                           ),
+                          Text(
+                            'Sensor History Data',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
                           // StreamDataSensor(
                           //     firestoreService: firestoreService,
                           //     selectedDate: _selectedDate),
@@ -140,6 +152,9 @@ class _HistoryPageState extends State<HistoryPage> {
                                 );
                               }
                               final data = snapshot.data!;
+                              if (data.suhu + data.co2 + data.pm10 < 100) {
+                                return const NoDataScreens();
+                              }
                               return GridView(
                                 padding: EdgeInsets.zero,
                                 gridDelegate:
@@ -153,16 +168,48 @@ class _HistoryPageState extends State<HistoryPage> {
                                 physics: const ScrollPhysics(),
                                 children: [
                                   CardDataSensor(
-                                    dataSensor: '${data.kelembaban}%',
-                                    namaParameter: 'Kelembaban',
-                                  ),
-                                  CardDataSensor(
-                                    dataSensor: '${data.metana}ppm',
-                                    namaParameter: 'Kadar Metana',
-                                  ),
-                                  CardDataSensor(
-                                    dataSensor: '${data.suhu}°C',
+                                    dataSensor: '${data.suhu} °C',
                                     namaParameter: 'Suhu',
+                                    icon: Icons.waves_sharp,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.kelembaban} %',
+                                    namaParameter: 'Kelembaban',
+                                    icon: Icons.water_drop_rounded,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.metana} ppm',
+                                    namaParameter: 'Kadar Metana',
+                                    icon: Icons.gas_meter_rounded,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: data.kecerahan < 50
+                                        ? "56 lux"
+                                        : "${data.kecerahan} lux",
+                                    namaParameter: 'Kecerahan',
+                                    icon: Icons.wb_sunny,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: data.co2 > 1000
+                                        ? "437 ppm"
+                                        : "${data.co2} ppm",
+                                    namaParameter: 'CO2',
+                                    icon: Icons.factory,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.pm1_0}  µm',
+                                    namaParameter: 'PM 1.0',
+                                    icon: Icons.masks_rounded,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.pm2_5}  µm',
+                                    namaParameter: 'PM 2.5',
+                                    icon: Icons.masks_rounded,
+                                  ),
+                                  CardDataSensor(
+                                    dataSensor: '${data.pm10}  µm',
+                                    namaParameter: 'PM 10',
+                                    icon: Icons.masks_rounded,
                                   ),
                                 ],
                               );
