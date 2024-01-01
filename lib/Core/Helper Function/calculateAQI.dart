@@ -1,7 +1,7 @@
 import 'package:atmostrack/Model/sensor.dart';
 import 'package:flutter/material.dart';
 
-int calculateAQIIndex(SensorModel sensorData) {
+int hitungAQIIndex(SensorModel sensorData) {
   // Define the breakpoints and corresponding AQI ranges
   const List<int> breakpoints = [0, 50, 100, 150, 200, 300, 5000];
   const List<int> aqiRanges = [0, 50, 100, 150, 200, 300, 1000];

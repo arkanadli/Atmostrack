@@ -251,7 +251,7 @@ class _MainPageState extends State<MainPage> {
               );
             }
             final data = snapshot.data!;
-            final listAQI = data.map((e) => calculateAQIIndex(e)).toList();
+            final listAQI = data.map((e) => hitungAQIIndex(e)).toList();
             print(listAQI);
             listData = List.generate(
               data.length,
@@ -518,7 +518,7 @@ class dailyDataSection extends StatelessWidget {
       builder: (BuildContext context, String value, Widget? child) {
         if (value.isNotEmpty) {
           final data = SensorModel.fromString(value);
-          final indeksAQI = calculateAQIIndex(data);
+          final indeksAQI = hitungAQIIndex(data);
           // const indeksAQI = 2542;
           // print(indeksAQI);
           // print(data);
