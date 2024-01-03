@@ -89,6 +89,7 @@ class ProfilePage extends StatelessWidget {
                       "Members",
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
+                    
                     const SizedBox(
                       height: 24.0,
                     ),

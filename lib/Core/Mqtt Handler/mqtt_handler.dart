@@ -68,6 +68,7 @@ class MqttHandler with ChangeNotifier {
 
   void onConnected() {
     print('MQTT_LOGS:: Connected');
+    publishMessage('Device Arkan Connected');
   }
 
   void onDisconnected() {
@@ -91,7 +92,7 @@ class MqttHandler with ChangeNotifier {
   }
 
   void publishMessage(String message) {
-    const pubTopic = 'asharilabs/suhu';
+    const pubTopic = 'ramzi/connection';
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
 
