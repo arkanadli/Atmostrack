@@ -215,84 +215,91 @@ class _MainPageState extends State<MainPage> {
                           .copyWith(fontSize: 20),
                     ),
                   ),
-                  FutureBuilder(
-                    future: getPredict(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(
-                                  snapshot.error.toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {});
-                                },
-                                child: const Icon(Icons.refresh),
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                      final data = snapshot.data;
-                      print('sadsadasd $data');
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            getAqiIcon(data!.floor()),
-                            size: 100,
-                            color: getAqiColor(data.floor()),
-                          ),
-                          Text(
-                            '$data',
-                            style: TextStyle(
-                              color: getAqiColor(data.floor()),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 40,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  getAqiRecommendation(data.floor()),
-                                  textAlign: TextAlign.justify,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  )
+                  predictionSection(),
+                  const SizedBox(
+                    height: 30.0,
+                  ),
                 ],
               ),
             )),
       ),
+    );
+  }
+
+  FutureBuilder<double> predictionSection() {
+    return FutureBuilder(
+      future: getPredict(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    snapshot.error.toString(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {});
+                  },
+                  child: const Icon(Icons.refresh),
+                )
+              ],
+            ),
+          );
+        }
+        final data = snapshot.data;
+        print('sadsadasd $data');
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              getAqiIcon(data!.floor()),
+              size: 100,
+              color: getAqiColor(data.floor()),
+            ),
+            Text(
+              '$data',
+              style: TextStyle(
+                color: getAqiColor(data.floor()),
+                fontWeight: FontWeight.w600,
+                fontSize: 40,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    getAqiRecommendation(data.floor()),
+                    textAlign: TextAlign.justify,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

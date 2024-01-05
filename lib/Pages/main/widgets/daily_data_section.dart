@@ -103,7 +103,7 @@ class dailyDataSection extends StatelessWidget {
                             Radius.circular(500),
                           ),
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.inversePrimary,
+                            color: Theme.of(context).colorScheme.primary,
                             width: 2,
                           ),
                           color: Theme.of(context)
