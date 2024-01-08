@@ -44,15 +44,12 @@ class _HistoryPageState extends State<HistoryPage> {
 
         if (resp.statusCode == 200) {
           final data = jsonDecode(resp.body);
-          print(data);
           return SensorModel.fromJson(data[0]);
         } else {
           throw 'Bad Response';
         }
       } catch (e) {
-        print('Error: $e');
         retryCount++;
-        // You can add a delay before retrying if needed
         await Future.delayed(const Duration(seconds: 2));
       }
     }
@@ -76,7 +73,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   HeaderImage(
                       imageUrl: 'assets/images/ilustrationPageHistory.png'),
                   LocationBadge(
-                    location: 'Jl. Cisitu Indah Baru, Dago, Bandung',
+                    location: 'Bandung, Indonesia',
                   ),
                 ],
               ),

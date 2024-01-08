@@ -39,15 +39,11 @@ class MqttHandler with ChangeNotifier {
     }
 
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
-      print('MQTT_LOGS::Mosquitto client connected');
+      // print('MQTT_LOGS::Mosquitto client connected');
     } else {
-      print(
-          'MQTT_LOGS::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
       client.disconnect();
       return -1;
     }
-
-    print('MQTT_LOGS::Subscribing to the test/lol topic');
     const topic = 'ramzi';
     client.subscribe(topic, MqttQos.atMostOnce);
 
@@ -58,9 +54,6 @@ class MqttHandler with ChangeNotifier {
 
       data.value = pt;
       notifyListeners();
-      print(
-          'MQTT_LOGS:: New data arrived: topic is <${c[0].topic}>, payload is $pt');
-      print('');
     });
 
     return client;

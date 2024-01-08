@@ -57,9 +57,8 @@ class _MainPageState extends State<MainPage> {
           throw 'Bad Response';
         }
       } catch (e) {
-        print('Error: $e');
+        // print('Error: $e');
         retryCount++;
-        // You can add a delay before retrying if needed
         await Future.delayed(const Duration(seconds: 2));
       }
     }
@@ -81,7 +80,7 @@ class _MainPageState extends State<MainPage> {
             (e) => SensorModel.fromJson(e),
           )
           .toList();
-      print(listDataSensorAVG);
+
       return listDataSensorAVG;
     } else {
       throw 'Bad Response';
@@ -149,7 +148,7 @@ class _MainPageState extends State<MainPage> {
                               color: Color.fromARGB(255, 255, 255, 255),
                             ),
                             Text(
-                              'Jl. Cisitu Indah Baru, Dago, Bandung',
+                              'Bandung, Indonesia',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
