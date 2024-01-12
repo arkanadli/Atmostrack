@@ -85,7 +85,7 @@ class MqttHandler with ChangeNotifier {
   }
 
   void publishMessage(String message) {
-    const pubTopic = 'ramzi/connections';
+    const pubTopic = 'ramzi/connection';
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
 
