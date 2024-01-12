@@ -8,7 +8,7 @@ class HeaderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 265,
+      height: 190,
       child: Center(
         child: Image.asset(imageUrl),
       ),

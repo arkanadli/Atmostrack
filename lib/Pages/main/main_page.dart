@@ -113,7 +113,7 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     SizedBox(
                       width: double.maxFinite,
-                      height: 265,
+                      height: 190,
                       child: Center(
                         child: Image.asset(
                             'assets/images/ilustrationMainPage.png'),

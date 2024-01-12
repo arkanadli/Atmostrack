@@ -154,7 +154,7 @@ class dailyDataSection extends StatelessWidget {
           height: 200,
           child: Center(
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.info_outline,
