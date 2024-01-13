@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
     // TODO: implement initState
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1000),
     );
     fadeAnimation = Tween(begin: 0.6, end: 1.00).animate(
       CurvedAnimation(parent: controller, curve: Curves.decelerate),
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _loadingScreen() async {
-    await Future.delayed(const Duration(seconds: 4), () {});
+    await Future.delayed(const Duration(seconds: 5), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MainBoilerPlate()),
