@@ -10,7 +10,7 @@ int hitungAQIIndex(SensorModel sensorData) {
   final List<int> pollutants = [
     sensorData.pm2_5,
     // sensorData.pm10,
-    sensorData.pm1_0,
+    // sensorData.pm1_0,
     // sensorData.co2,
     // sensorData.metana
     // Add other pollutants as needed
