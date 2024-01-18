@@ -149,7 +149,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 );
                               }
                               final data = snapshot.data!;
-                              if (data.suhu + data.co2 + data.pm10 < 10) {
+                              if (data.suhu + data.co2 + data.pm10 < 9) {
                                 return const NoDataScreens();
                               }
                               return GridView(
