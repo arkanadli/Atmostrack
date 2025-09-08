@@ -1,16 +1,46 @@
-# atmostrack
+# 🌍 Atmostrack IoT System
 
-A new Flutter project.
+An **IoT-based air quality monitoring system** with real-time data visualization, alert notifications, and historical analytics.  
+Designed to help communities and organizations **track environmental conditions** and make data-driven decisions.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🌫️ **Air Quality Monitoring** – Measure PM2.5, PM10, CO₂, and other environmental indicators  
+- 📡 **Real-Time Data** – Live sensor readings transmitted via MQTT protocol  
+- 📊 **Historical Analytics** – Store and visualize data trends over time  
+- 📱 **Mobile App** – Flutter app for user-friendly monitoring  
+- 🔔 **Alerts & Notifications** – Threshold-based notifications when air quality is poor  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠 Tech Stack
+
+**IoT & Communication**  
+- MQTT Protocol  
+- IoT Sensors (PM2.5, PM10, CO₂, etc.)  
+
+**Frontend (Mobile App)**  
+- Flutter  
+
+**Backend**  
+- PHP  
+- RESTful API  
+
+**Database**  
+- MySQL  
+
+**Deployment**  
+- Nginx  
+
+---
+
+## 📂 Project Structure
+
+```bash
+atmostrack/
+├── mobile/           # Flutter app (Android/iOS)
+├── backend/          # PHP API + MySQL
+├── mqtt/             # MQTT broker setup
+└── README.md
